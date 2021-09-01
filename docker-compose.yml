@@ -6,29 +6,6 @@ volumes:
 
 # The build-args have default values that will be used if unspecified. 
 services:
-    # jenkins:
-    #     build:
-    #         context: .
-    #         #args:
-    #          #   DOCKER_GID: ${DOCKER_GID}
-    #           #  DOCKER_ENGINE: ${DOCKER_ENGINE}
-    #            # DOCKER_COMPOSE: ${DOCKER_COMPOSE}
-    #     volumes:
-    #         - jenkins_home:/var/jenkins_home
-    #     environment:
-    #         - DOCKER_HOST=tcp://socat:2375
-    #     links:
-    #         - socat
-    #     ports:
-    #         - "8080:8080"
-        
-    # socat:
-    #     image: alpine/socat
-    #     command: tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
-    #     volumes:
-    #         - /var/run/docker.sock:/var/run/docker.sock
-    #     expose:
-    #         - "127.0.0.1:2376:2375"
 
   jenkins:
     container_name: jenkins
@@ -37,7 +14,6 @@ services:
       - 8080:8080
     volumes:
       - jenkins_home:/var/jenkins_home
-
 
   socat:
       container_name: socat
@@ -48,11 +24,13 @@ services:
         - /var/run/docker.sock:/var/run/docker.sock
       command: tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
 
-
-#             docker run -d --restart=always \
-# -v /var/run/docker.sock:/var/run/docker.sock \
-# -p 127.0.0.1:2376:2375 \
-# --name docker-api-proxy \
-# alpine/socat \
-# tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
-        
+  vault-server:
+    container_name: vault-dev
+    image: vault:latest
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_ADDR: "http://0.0.0.0:8200"
+      VAULT_DEV_ROOT_TOKEN_ID: "vault-plaintext-root-token"
+    cap_add:
+      - IPC_LOCK
