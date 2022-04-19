@@ -7,7 +7,7 @@ networks:
 services:
   jenkins_server:
     build:
-      context: .
+      context: ./jenkins-master
     networks:
       - jenkins
     container_name: JenkinsServer
@@ -24,19 +24,19 @@ services:
       - ./jenkins-docker-certs:/certs/client:ro
       - ./extras:/extras:rw
 
-  jenkins_docker:
-    image: docker:dind
-    networks:
-      jenkins:
-        aliases:
-          - docker
-    container_name: JenkinsDocker
-    privileged: true
-    environment:
-      - DOCKER_TLS_CERTDIR=/certs
-    ports:
-      - "2376:2376"
-    volumes:
-      - ./jenkins-docker-certs:/certs/client
-      - ./jenkins-data:/var/jenkins_home
-      - ./extras:/extras
+#  jenkins_docker:
+#    image: docker:dind
+#    networks:
+#      jenkins:
+#        aliases:
+#          - docker
+#    container_name: JenkinsDocker
+#    privileged: true
+#    environment:
+#      - DOCKER_TLS_CERTDIR=/certs
+#    ports:
+#      - "2376:2376"
+#    volumes:
+#      - ./jenkins-docker-certs:/certs/client
+#      - ./jenkins-data:/var/jenkins_home
+#      - ./extras:/extras

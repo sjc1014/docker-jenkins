@@ -1,1 +1,6 @@
 .vscode
+jenkins-data
+jenkins-docker-certs
+jenkins-slave
+*.iml
+/extras/
